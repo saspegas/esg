@@ -2,16 +2,21 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ReportResource\Pages;
-use App\Filament\Resources\ReportResource\RelationManagers;
-use App\Models\Report;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\Topic;
+use App\Models\Choice;
+use App\Models\Report;
+use App\Models\Question;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Filament\Resources\Resource;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Wizard;
 use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ReportResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ReportResource\RelationManagers;
 
 class ReportResource extends Resource
 {
@@ -21,9 +26,28 @@ class ReportResource extends Resource
 
     public static function form(Form $form): Form
     {
+        // $topics = Topic::all();
+        $topics = Topic::where('id', '<=', 20)->get();
+
+        $steps = $topics->map(function($topic) {
+            $questions = Question::where('topic_id', $topic->id)->get();
+
+            $questionSchemas = $questions->map(function($question) {
+                $choices = Choice::where('question_id', $question->id)->get()->pluck('choice', 'id');
+
+                return Radio::make($question->id)
+                    ->label($question->question)
+                    ->options($choices->toArray())
+                    ->required();
+            });
+
+            return Wizard\Step::make($topic->name)
+                ->schema($questionSchemas->toArray());
+        });
+
         return $form
             ->schema([
-                //
+                Wizard::make($steps->toArray())
             ]);
     }
 

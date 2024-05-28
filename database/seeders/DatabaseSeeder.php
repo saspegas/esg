@@ -3,6 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Choice;
+use App\Models\Question;
+use App\Models\Topic;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +16,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $topicTitles = [
+            'Politika',
+            'Riskler',
+            'Yönetim Programları',
+            'Organizasyon',
+            'Acil Durum',
+            'Paydaş Katılımı',
+            'Şikayetler',
+            'Raporlama',
+            'İzleme',
+        ];
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        foreach ($topicTitles as $title) {
+            Topic::factory(['name' => $title])->has(
+                Question::factory()->count(3)->has(
+                    Choice::factory()->count(4)
+                )
+            )->create();
+        }
     }
 }
