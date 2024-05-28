@@ -19,4 +19,9 @@ class Report extends Model
     {
         return $this->hasMany(Answer::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

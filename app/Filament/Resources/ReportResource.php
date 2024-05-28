@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ReportResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ReportResource\RelationManagers;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 
 class ReportResource extends Resource
 {
@@ -55,13 +57,16 @@ class ReportResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('user.name'),
+                TextColumn::make('status'),
+                TextColumn::make('score')->getStateUsing(fn (Model $record) => $record->score ?? 'calculating...'),
+                TextColumn::make('updated_at'),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // 
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
