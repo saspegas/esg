@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Observers\ReportObserver;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
+#[ObservedBy([ReportObserver::class])]
 class Report extends Model
 {
     use HasFactory;
@@ -13,6 +16,7 @@ class Report extends Model
         'user_id',
         'title',
         'status',
+        'score',
     ];
 
     public function answers()

@@ -13,6 +13,10 @@ class CreateReport extends CreateRecord
 {
     protected static string $resource = ReportResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
     protected function handleRecordCreation(array $data): Model
     {
         DB::beginTransaction();

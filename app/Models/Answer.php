@@ -13,4 +13,14 @@ class Answer extends Model
         'question_id',
         'choice_id',
     ];
+
+    public function report()
+    {
+        return $this->belongsTo(Report::class);
+    }
+    
+    public function choice()
+    {
+        return $this->belongsTo(Choice::class);
+    }
 }
